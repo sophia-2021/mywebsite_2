@@ -1,0 +1,14 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:42:51-05:00"
+description: Breakdown of voting tendency by party 
+draft: false
+image: London_2.jpg
+keywords: ""
+slug: brexit_and_political_party
+title: Political affiliation and Brexit voting 
+---
+
+## Analysis of Brexit voting results broked down by political affiliation 

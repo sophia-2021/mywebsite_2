@@ -1,0 +1,56 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:42:51-05:00"
+description: General information and introduction.
+draft: false
+image: journey_2.jpg
+keywords: ""
+slug: sophia
+title: About me
+---
+
+
+## Introduction
+My name is Sophia and I grew up in **Germany**. This website was created to introduce myself and showcase some of the work I have done so far. On this page you can find a general introduction. On the other tabs you will be able to find some example analysis and visualizations I have been working on. In case you have any questions, feel free to get in touch over the contact details provided. 
+
+## Education 
+As mentioned, I was born and raised in Germany. I attended primary and elementary school in a town close to Frankfurt. In addition, I went to a Gymnasium in that same town.
+
+### High School
+During the tenth grade, I decided to take an exchange semester to a boarding school in the US. Little did I know that I would end up liking it so much, that I decided to stay and complete my high school there. After three years of boarding school, I graduated from high school in 2018 and returned to Germany for my university studies. 
+
+### University 
+
+#### Undergraduate studies 
+In September 2018 I started by Bachelor of Business Administration studies at the German university [WHU-Otto Beisheim School of Management](https://www.whu.edu/en/). Despite the Covid pandemic, I has able to complete an exchange semester in South Korea at [Yonsei University](https://www.yonsei.ac.kr/en_sc/index.jsp), which was an amazing and formative experience in the fall of 2020. I wrote by Bachelors thesis in the Spring of 2021 and officially graduated in September 2021. 
+During my studies, I joined the student initiative Enactus and Sensability - The WHU Impact Summit at WHU. Additionally, I worked as a student research assistant for the Institute of Management & Control and conducted mathematics tutorials for younger semester students. 
+
+#### Graduate studies
+For my Masters studies, I decided to move abroad again. I am currently attending the Masters in Analytics and Management program of [London Business School](https://www.london.edu/) and am expecting to graduate in the summer of 2022. 
+
+## Hobbies
+
+### Golf 
+When I was younger I played competitive golf and frequently traveled to tournaments on the weekends. I competed for my club and state in different regional and national tournaments. At my high school in the United States I actually joined a golf academy and almost practiced every day. I was able to compete in various different states (e.g. Georgia, Florida, Alabama, Tennessee, North Carolina, South Carolina), in different individual tournament series. In addition, I played for the high school team, with which we actually won the State Championship in 2018. 
+Now, however, I do not compete in tournaments anymore but rather play with family and friends just for fun. I am however still a member of the women's team of my home club in Germany. 
+
+### Travelling 
+Another thing I really like to do is travel and explore. Hiking trips, beach days or city tour, all are always valuable memories and definitely time well spend. 
+
+My favorite trips so far have been: 
+
+* South Africa
+* Thailand
+* Maldives 
+* Ecuador 
+
+Next destinations on my bucket list are: 
+
+* Iceland
+* New Zealand
+* Italy 
+
+
+

@@ -1,0 +1,176 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:42:51-05:00"
+description: German election 2021 forecasts up until 10.September 2021.
+draft: false
+image: Germany_2.jpg
+keywords: ""
+slug: german_election
+title: Germany election 2021 forecast
+---
+
+<script src="German Election_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="calculate-2-week-moving-average-of-opinion-polls-for-the-2021-german-elections" class="section level1">
+<h1>Calculate 2-week moving average of opinion polls for the 2021 German elections</h1>
+<p>The Guardian newspaper has an <a href="https://www.theguardian.com/world/2021/aug/20/german-election-poll-tracker-who-will-be-the-next-chancellor">election poll tracker for the upcoming German election</a>. The list of the opinion polls since Jan 2021 can be found at <a href="https://en.wikipedia.org/wiki/Opinion_polling_for_the_2021_German_federal_election">Wikipedia</a>. Here I will reproduce the graph with the following code. This is the picture from <a href="https://www.theguardian.com/world/2021/aug/20/german-election-poll-tracker-who-will-be-the-next-chancellor">The Guardian</a> that is replicated with the code. However, we choose to only plot the values for 2021. We keep the update date fixed at 10. September 2021 for simplicity.</p>
+<p><img src="/Users/sophiakalusche/Desktop/LBS/Applied Statistics/mywebsite_2/images/german_election" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>url &lt;- &quot;https://en.wikipedia.org/wiki/Opinion_polling_for_the_2021_German_federal_election&quot;
+
+# get tables that exist on wikipedia page 
+tables &lt;- url %&gt;% 
+  read_html() %&gt;% 
+  html_nodes(css=&quot;table&quot;)
+
+
+# parse HTML tables into a dataframe called polls 
+# Use purr::map() to create a list of all tables in URL
+polls &lt;- map(tables, . %&gt;% 
+             html_table(fill=TRUE)%&gt;% 
+             janitor::clean_names())
+
+
+# list of opinion polls
+german_election_polls &lt;- polls[[1]] %&gt;% # the first table on the page contains the list of all opinions polls
+  slice(2:(n()-1)) %&gt;%  # drop the first row, as it contains again the variable names and last row that contains 2017 results
+  mutate(
+         # polls are shown to run from-to, e.g. 9-13 Aug 2021. We keep the last date, 13 Aug here, as the poll date
+         # and we extract it by picking the last 11 characters from that field
+         end_date = &quot;10-09-2021&quot;,
+         
+         # end_date is still a string, so we convert it into a date object using lubridate::dmy()
+         end_date = dmy(end_date),
+         
+         # we also get the month and week number from the date, if we want to do analysis by month- week, etc.
+         month = month(end_date),
+         week = isoweek(end_date))</code></pre>
+<pre class="r"><code>german_polls &lt;- german_election_polls %&gt;% 
+  
+  #Select parties data we need 
+  select(polling_firm, end_date, samplesize, union, spd, af_d, fdp, linke, grune) %&gt;% 
+  
+  #Eliminate &quot;,&quot; from sample size so that we can change it to numeric
+  mutate(samplesize= gsub(&quot;,&quot; , &quot;&quot; , samplesize)) %&gt;% 
+  
+  #Change samplesize from chr to numeric 
+  mutate(samplesize=as.numeric(samplesize)) %&gt;% 
+  
+  #Calculate actual votes per party 
+  mutate(union_votes=samplesize*(union/100), 
+         spd_votes=samplesize*(spd/100),
+         af_d_votes=samplesize*(af_d/100),
+         fdp_votes=samplesize*(fdp/100),
+         linke_votes=samplesize*(linke/100),
+         grune_votes=samplesize*(grune/100)) %&gt;%  
+  
+  #Calculate 14 day moving average of samplesize across different surveys
+  mutate(samplesizem = movavg(samplesize, 14, &quot;s&quot;), 
+         
+        #Calculate moving average % per party
+         unionm = (movavg(union_votes, 14, &quot;s&quot;)/samplesizem*100), 
+         spdm = (movavg(spd_votes, 14, &quot;s&quot;)/samplesizem*100),
+         af_dm = (movavg(af_d_votes, 14, &quot;s&quot;)/samplesizem*100),
+         fdpm = (movavg(fdp_votes, 14, &quot;s&quot;)/samplesizem*100),
+         linkem = (movavg(linke_votes, 14, &quot;s&quot;)/samplesizem*100),
+         grunem = (movavg(grune_votes, 14, &quot;s&quot;)/samplesizem*100),
+         )
+
+german_polls</code></pre>
+<pre><code>## # A tibble: 225 × 22
+##    polling_firm        end_date   samplesize union   spd  af_d   fdp linke grune
+##    &lt;chr&gt;               &lt;date&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Forschungsgruppe W… 2021-09-10       1281  22      25    11  11     6    17  
+##  2 Kantar              2021-09-10       1901  21      25    12  12     6    17  
+##  3 Wahlkreisprognose   2021-09-10       1208  19      28    11  12     6    14  
+##  4 Civey               2021-09-10      10082  23      25    11  11     6    17  
+##  5 YouGov              2021-09-10       1700  21      26    12  10     6    15  
+##  6 Allensbach          2021-09-10       1258  25      27    11   9.5   6    15.5
+##  7 INSA                2021-09-10       2052  20.5    26    11  12.5   6.5  15.5
+##  8 GMS                 2021-09-10       1004  23      25    11  12     6    17  
+##  9 Forsa               2021-09-10       2505  19      25    11  13     6    17  
+## 10 INSA                2021-09-10       1427  20      25    12  13     7    16  
+## # … with 215 more rows, and 13 more variables: union_votes &lt;dbl&gt;,
+## #   spd_votes &lt;dbl&gt;, af_d_votes &lt;dbl&gt;, fdp_votes &lt;dbl&gt;, linke_votes &lt;dbl&gt;,
+## #   grune_votes &lt;dbl&gt;, samplesizem &lt;dbl&gt;, unionm &lt;dbl&gt;, spdm &lt;dbl&gt;,
+## #   af_dm &lt;dbl&gt;, fdpm &lt;dbl&gt;, linkem &lt;dbl&gt;, grunem &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#create legend numbers following each party
+union_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(union)
+spd_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(spd)
+af_d_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(af_d)
+fdp_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(fdp)
+linke_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(linke)
+grune_rate &lt;- german_polls %&gt;% filter(end_date == end_date[length(end_date)]) %&gt;% select(grune)
+
+#paste the text and number together
+union_rate &lt;- paste(&quot;Union   &quot;, union_rate[1,1])
+spd_rate &lt;- paste(&quot;SPD     &quot;, spd_rate[1,1])
+af_d_rate &lt;- paste(&quot;AfD      &quot;, af_d_rate[1,1])
+fdp_rate &lt;- paste(&quot;FDP    &quot;, fdp_rate[1,1])
+linke_rate &lt;- paste(&quot;Linke   &quot;, linke_rate[1,1])
+grune_rate &lt;- paste(&quot;Grune   &quot;, grune_rate[1,1])</code></pre>
+<pre class="r"><code>#Create the table 
+german_polls %&gt;% 
+  select(end_date, union, spd, af_d, fdp, linke, grune, unionm, spdm, af_dm, fdpm, linkem, grunem) %&gt;% 
+  ggplot() +
+  
+  #Add color depending on party
+  geom_point(aes(x=end_date,y=union, color=&quot;black&quot;), alpha=0.2) +
+  geom_line(aes(x=end_date,y=unionm), color=&quot;black&quot;) +
+  geom_point(aes(x=end_date,y=spd, color=&quot;red&quot;), alpha=0.2) +
+  geom_line(aes(x=end_date,y=spdm), color=&quot;red&quot;) +
+  geom_point(aes(x=end_date,y=af_d, color=&quot;blue&quot;), alpha=0.2) +
+  geom_line(aes(x=end_date,y=af_dm), color=&quot;blue&quot;) +
+  geom_point(aes(x=end_date,y=grune, color=&quot;green&quot;), alpha=0.2) + 
+  geom_line(aes(x=end_date,y=grunem), color=&quot;green&quot;) +
+  geom_point(aes(x=end_date,y=fdp, color=&quot;yellow&quot;), alpha=0.2) +
+  geom_line(aes(x=end_date,y=fdpm), color=&quot;yellow&quot;) +
+  geom_point(aes(x=end_date,y=linke, color=&quot;purple&quot;), alpha=0.2) +
+  geom_line(aes(x=end_date,y=linkem), color=&quot;purple&quot;) +
+  
+  #Add horizontal dashed lines 
+  geom_hline(yintercept=5, linetype=&quot;dashed&quot;,color = &quot;grey&quot;, size=0.5) +
+  geom_hline(yintercept=15, linetype=&quot;dashed&quot;,color = &quot;grey&quot;, size=0.5) +
+  geom_hline(yintercept=25, linetype=&quot;dashed&quot;,color = &quot;grey&quot;, size=0.5) +
+  geom_hline(yintercept=35, linetype=&quot;dashed&quot;,color = &quot;grey&quot;, size=0.5) +
+  geom_hline(yintercept=45, linetype=&quot;dashed&quot;,color = &quot;grey&quot;, size=0.5) +
+  
+  #Add text 
+  geom_text(aes(end_date[length(end_date)],5, label= &quot;  electoral threshold&quot;, color = &quot;grey&quot;, vjust=1, hjust=0.3), size=3) +
+  
+  #Set colors of legend 
+  scale_color_identity(name= &quot;10 Sep 2021&quot;, breaks=c(&quot;black&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;yellow&quot;, &quot;purple&quot;),
+                       labels=  c(union_rate, spd_rate, af_d_rate, grune_rate, fdp_rate, linke_rate),
+                       guide = &quot;legend&quot;) + #Create a legend 
+  
+  theme_bw() +
+  
+  theme(legend.background = element_rect(color = &quot;black&quot;), panel.grid = element_blank(),
+        legend.position = c(0.925,0.756),
+        legend.title = element_text(size = 10, face = &quot;bold&quot;),
+        legend.text = element_text(size = 8), legend.key.size = unit(1, &quot;lines&quot;),
+        legend.spacing.y = unit(0.01, &quot;cm&quot;),
+        plot.caption = element_text(hjust = 0)) +
+  
+   #Adjust y axis 
+  scale_y_continuous(breaks = c(5, 15, 25, 35, 45),
+                     labels = c(&quot;5&quot;, &quot;15&quot;, &quot;25&quot;, &quot;35&quot;, &quot;45%&quot;),
+                     limits = c(0, 70)) +
+  
+  #Adjust x axis 
+  scale_x_continuous(breaks = c(german_election_polls$end_date[214],
+                                german_election_polls$end_date[151],
+                                german_election_polls$end_date[67]),
+                     labels = c(&quot;Jan 2021&quot;, &quot;Apr&quot;, &quot;Jul&quot;)) +
+  
+  #Label the graph
+  labs(caption = &quot;Source: wahlrecht.de, last updated 10 Sep 2021&quot;,
+  title=&quot;German election poll tracker: who will be the next chancellor?&quot;,
+  subtitle = &quot;Find out who is leading the polling to succeed Angela Merkel as chancellor of Germany&quot;,
+  x = &quot;&quot;,
+  y = &quot;&quot;) + 
+  NULL</code></pre>
+<p><img src="/blogs/German%20Election_files/figure-html/create%20table%20german%20polls,%20-1.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>

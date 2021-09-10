@@ -1,0 +1,114 @@
+sbaseURL: https://sophia-2021-portfolio.netlify.app/
+languageCode: en-us
+title: Portfolio website for Sophia 
+theme: forty
+googleAnalytics: ''
+disqusShortname: ''
+params:
+  banner:
+    buttonText: Get Started
+    subtitle: |-
+      Click around and find out more about who I am, 
+      my work and my experiences so far, 
+      and my goals and aspirations for the future.
+    title: Welcome to my website 
+  blog: {}
+  contact:
+    address:
+      - city: London
+        country: United Kingdom
+        street: Regent Park
+  #      title: Address
+    buttonClear: Clear
+    buttonSend: Send message
+    email:
+      - email: skalusche.mam2022@london.edu
+        title: Email
+    enable: yes
+    phone:
+      - phone: +49 (0) 160 6111999
+        title: Phone
+  custom_css: []
+  custom_js: []
+  description: Your description
+  error404:
+    heading: Page couldn't be found
+    text: Please visit [this page](/)
+  favicon: favicon.ico
+  footer:
+    copyright: Company Name
+    enable: yes
+    quicklinks:
+      - alt: HTML5 UP
+        text: 'Design: '
+        url: https://www.html5up.net
+    social:
+    #  - icon: fa-twitter
+    #    label: Twitter
+    #    url: https://www.twitter.com
+      - icon: fa-facebook
+        label: Facebook
+        url: https://www.facebook.com/sophiakalusche/
+      - icon: fa-instagram
+        label: Instagram
+        url: https://www.instagram.com/sophiak0611/
+      - icon: fa-github
+        label: GitHub
+        url: https://github.com/sophia-2021
+      - icon: fa-linkedin
+        label: LinkedIn
+        url: https://www.linkedin.com/in/sophia-kalusche/
+  image: ''
+  name: Your name
+  navigation:
+    button1:
+      - name: Get Started
+        url: blogs
+    button2:
+      - name: Log In
+        url: '#'
+    links:
+      - name: Home
+        url: '#'
+      - name: Blogs
+        url: blogs
+      - name: Generic Blog
+        url: blogs/ipsum
+      - name: Elements
+        url: elements.html
+    menu: Menu
+    subtitle: By HTML5 Up
+    title: Forty
+  tiles:
+    enable: yes
+    showcase:
+      - image: journey.jpg
+        subtitle: Brief introduction 
+        title: About me
+        url: blogs/sophia
+      - image: computer.jpg
+        subtitle: Education and experiences
+        title: CV
+        url: blogs/cv
+      - image: Germany.jpg
+        subtitle: Graphing moving average of several forecasts
+        title: Germany election 2021 forecast
+        url: blogs/german_election
+      - image: DC.jpg
+        subtitle: Analysis of approval rate since start of presidency 
+        title: Popularity of President Biden over time 
+        url: blogs/biden_popularity
+      - image: London.jpg
+        subtitle: Breakdown of voting tendency by party 
+        title: Political affiliation and Brexit voting 
+        url: blogs/brexit_and_political_party
+      - image: bike.jpg
+        subtitle: Visualizing excess monthly and weekly rentals 
+        title: TfL bike sharing
+        url: blogs/bike_sharing
+  two:
+    buttonText: Explore
+    enable: yes
+    subtitle: "Click around or get in touch to learn more about me."
+    title: Interested to leran more?
+    url: blogs
